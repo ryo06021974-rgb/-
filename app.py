@@ -1,11 +1,15 @@
+import json
 import random
 
 import pandas as pd
 import streamlit as st
 
 from events import IDEAL_TEAMS
-from questions import QUESTIONS
 from roles import ROLE_DESCRIPTIONS, ROLES
+
+
+with open("data/questions.json", "r", encoding="utf-8") as f:
+    QUESTIONS = json.load(f)
 
 
 st.set_page_config(
@@ -71,8 +75,10 @@ if not st.session_state.submitted:
 
         for answer, choices in zip(answers, st.session_state.choice_orders):
             choice_to_role = dict(choices)
-            selected_role = choice_to_role[answer]
-            scores[selected_role] += 1
+            selected_scores = choice_to_role[answer]
+
+            for role, point in selected_scores.items():
+                scores[role] += point
 
         st.session_state.scores = scores
         st.session_state.submitted = True
