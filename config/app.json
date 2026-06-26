@@ -1,0 +1,11 @@
+{
+  "app": {
+    "title": "AI・DX能力タイプ診断",
+    "description": "AI・DX時代における個人の能力タイプ、強み、伸びしろを診断するWebアプリ",
+    "question_count": 30,
+    "score_min": 0,
+    "score_max": 4,
+    "results_file": "results.csv",
+    "shuffle_questions": false
+  }
+}

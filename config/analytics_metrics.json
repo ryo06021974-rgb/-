@@ -1,0 +1,69 @@
+{
+  "analytics_metrics": [
+    {
+      "id": "participant_count",
+      "label": "診断実施人数",
+      "description": "診断を受けた人数",
+      "calculation": "count"
+    },
+    {
+      "id": "average_overall_score",
+      "label": "平均総合スコア",
+      "description": "全体のAI・DX成熟度",
+      "calculation": "mean",
+      "column": "overall_score"
+    },
+    {
+      "id": "type_distribution",
+      "label": "タイプ分布",
+      "description": "どのタイプが多いか",
+      "calculation": "value_counts",
+      "column": "diagnosis_type"
+    },
+    {
+      "id": "ability_average",
+      "label": "能力別平均",
+      "description": "組織の強み・弱み",
+      "calculation": "ability_means"
+    },
+    {
+      "id": "department_score",
+      "label": "部署別スコア",
+      "description": "部署ごとの差",
+      "calculation": "group_mean",
+      "group_by": "department",
+      "column": "overall_score"
+    },
+    {
+      "id": "job_score",
+      "label": "職種別スコア",
+      "description": "職種ごとの差",
+      "calculation": "group_mean",
+      "group_by": "job_type",
+      "column": "overall_score"
+    },
+    {
+      "id": "position_score",
+      "label": "役職別スコア",
+      "description": "管理職と一般社員の差",
+      "calculation": "group_mean",
+      "group_by": "position",
+      "column": "overall_score"
+    },
+    {
+      "id": "risk_low_score_rate",
+      "label": "リスク低スコア割合",
+      "description": "AI利用上の危険度",
+      "calculation": "below_rate",
+      "column": "risk_management_score",
+      "threshold": 50
+    },
+    {
+      "id": "level_4_or_higher_ratio",
+      "label": "Lv.4以上の割合",
+      "description": "推進人材の候補数",
+      "calculation": "level_min_rate",
+      "level_order_min": 4
+    }
+  ]
+}

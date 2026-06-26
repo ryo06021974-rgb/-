@@ -1,0 +1,16 @@
+{
+  "radar_chart": {
+    "title": "7能力レーダーチャート",
+    "min": 0,
+    "max": 100,
+    "ability_ids": [
+      "ai_basic",
+      "tool_usage",
+      "business_issue",
+      "data_usage",
+      "dx_planning",
+      "risk_management",
+      "organization_drive"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "warnings": [
+    {
+      "id": "risk_management_low",
+      "ability_id": "risk_management",
+      "threshold": 50,
+      "message": "AI活用時の情報漏えい、著作権、誤情報への注意が必要です"
+    },
+    {
+      "id": "data_usage_low",
+      "ability_id": "data_usage",
+      "threshold": 50,
+      "message": "効果測定や判断材料の整理に伸びしろがあります"
+    },
+    {
+      "id": "business_issue_low",
+      "ability_id": "business_issue",
+      "threshold": 50,
+      "message": "ツール活用の前に、業務課題を整理する力を伸ばすとよいでしょう"
+    },
+    {
+      "id": "organization_drive_low",
+      "ability_id": "organization_drive",
+      "threshold": 50,
+      "message": "個人活用からチーム展開へ広げる準備が必要です"
+    },
+    {
+      "id": "dx_planning_low",
+      "ability_id": "dx_planning",
+      "threshold": 50,
+      "message": "導入目的や費用対効果を考える力を伸ばすとよいでしょう"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "type_rules": [
+    {
+      "id": "low_overall",
+      "rule_type": "overall_range",
+      "type_id": "ai_chick",
+      "min_score": 0,
+      "max_score": 39,
+      "priority": 1
+    },
+    {
+      "id": "high_overall",
+      "rule_type": "overall_range",
+      "type_id": "future_leader",
+      "min_score": 85,
+      "max_score": 100,
+      "priority": 2
+    },
+    {
+      "id": "top_ai_basic",
+      "rule_type": "top_ability",
+      "ability_id": "ai_basic",
+      "type_id": "ai_chick",
+      "priority": 10
+    },
+    {
+      "id": "top_tool_usage",
+      "rule_type": "top_ability",
+      "ability_id": "tool_usage",
+      "type_id": "prompt_craftsperson",
+      "priority": 10
+    },
+    {
+      "id": "top_business_issue",
+      "rule_type": "top_ability",
+      "ability_id": "business_issue",
+      "type_id": "business_hacker",
+      "priority": 10
+    },
+    {
+      "id": "top_data_usage",
+      "rule_type": "top_ability",
+      "ability_id": "data_usage",
+      "type_id": "data_detective",
+      "priority": 10
+    },
+    {
+      "id": "top_dx_planning",
+      "rule_type": "top_ability",
+      "ability_id": "dx_planning",
+      "type_id": "dx_architect",
+      "priority": 10
+    },
+    {
+      "id": "top_risk_management",
+      "rule_type": "top_ability",
+      "ability_id": "risk_management",
+      "type_id": "ai_guardian",
+      "priority": 10
+    },
+    {
+      "id": "top_organization_drive",
+      "rule_type": "top_ability",
+      "ability_id": "organization_drive",
+      "type_id": "drive_captain",
+      "priority": 10
+    }
+  ]
+}

@@ -2,21 +2,41 @@ import json
 from pathlib import Path
 
 
-#　　設定読み込み・検証
+#設定読み込み・検証
 
 
-CONFIG_PATH = Path("diagnosis_config.json")
+CONFIG_DIR = Path("config")
+
+_CONFIG_FILES = [
+    "app",
+    "abilities",
+    "answer_options",
+    "levels",
+    "types",
+    "type_rules",
+    "warnings",
+    "radar_chart",
+    "auth",
+    "storage",
+    "admin",
+    "analytics_metrics",
+    "questions",
+]
 
 
 def load_config():
     """
-    設定ファイルを読み込む 
-    
+    設定ファイルを読み込む
+
     Returns:
         dict: 設定内容
     """
-    with CONFIG_PATH.open("r", encoding="utf-8") as f:
-        return json.load(f)
+    config = {}
+    for name in _CONFIG_FILES:
+        path = CONFIG_DIR / f"{name}.json"
+        with path.open("r", encoding="utf-8") as f:
+            config.update(json.load(f))
+    return config
 
 
 def ordered_abilities(config):

@@ -1,0 +1,46 @@
+{
+  "abilities": [
+    {
+      "id": "ai_basic",
+      "name": "AI基礎理解",
+      "description": "AIの特徴、得意・不得意、基本的な活用場面を理解する力",
+      "order": 1
+    },
+    {
+      "id": "tool_usage",
+      "name": "ツール活用力",
+      "description": "ChatGPTなどのAI・デジタルツールを業務で活用する力",
+      "order": 2
+    },
+    {
+      "id": "business_issue",
+      "name": "業務課題発見力",
+      "description": "業務のムダや課題を発見し、改善の方向性を考える力",
+      "order": 3
+    },
+    {
+      "id": "data_usage",
+      "name": "データ活用力",
+      "description": "データを読み取り、判断や改善に活かす力",
+      "order": 4
+    },
+    {
+      "id": "dx_planning",
+      "name": "DX企画力",
+      "description": "DX導入の目的、効果、進め方を設計する力",
+      "order": 5
+    },
+    {
+      "id": "risk_management",
+      "name": "リスク管理能力",
+      "description": "情報漏えい、著作権、誤情報、セキュリティに注意する力",
+      "order": 6
+    },
+    {
+      "id": "organization_drive",
+      "name": "組織推進力",
+      "description": "周囲を巻き込み、AI・DX活用をチームや組織に広げる力",
+      "order": 7
+    }
+  ]
+}

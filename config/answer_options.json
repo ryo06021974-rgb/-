@@ -1,0 +1,29 @@
+{
+  "answer_options": [
+    {
+      "id": "cannot",
+      "label": "ほとんどできない",
+      "score": 0
+    },
+    {
+      "id": "not_much",
+      "label": "あまりできない",
+      "score": 1
+    },
+    {
+      "id": "neutral",
+      "label": "どちらともいえない",
+      "score": 2
+    },
+    {
+      "id": "mostly",
+      "label": "ある程度できる",
+      "score": 3
+    },
+    {
+      "id": "enough",
+      "label": "十分できる",
+      "score": 4
+    }
+  ]
+}

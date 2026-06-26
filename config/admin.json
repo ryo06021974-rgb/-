@@ -1,0 +1,17 @@
+{
+  "admin": {
+    "enabled": true,
+    "view_type": "spreadsheet",
+    "metrics": [
+      "participant_count",
+      "average_total_score",
+      "type_distribution",
+      "ability_average",
+      "department_score",
+      "job_score",
+      "position_score",
+      "low_risk_score_ratio",
+      "level_4_or_higher_ratio"
+    ]
+  }
+}
