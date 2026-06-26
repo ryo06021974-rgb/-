@@ -24,6 +24,11 @@ def ordered_abilities(config):
 
 
 def validate_config(config):
+    """
+    設定ファイルの整合性を検証する関数。
+    設定ファイルに不整合がある場合、ValueErrorを発生させる。
+    Args:
+        config (dict): 設定ファイルの内容を表す辞書。"""
     ability_ids = {ability["id"] for ability in config["abilities"]}
     answer_option_ids = {option["id"] for option in config["answer_options"]}
     question_ids = {question["id"] for question in config["questions"]}
@@ -84,6 +89,10 @@ def validate_config(config):
 
 
 def initialize_session_state():
+    """_summary_
+    セッションステートの初期化を行う関数。
+    セッションステートに必要なキーが存在しない場合、デフォルト値を設定する。    
+    """
     defaults = {
         "answers": {},
         "is_answered": False,
@@ -290,6 +299,16 @@ def build_answers_payload(config, answers):
 
 
 def build_result_record(config, result):
+    """_summary_
+    診断結果をCSVに保存するためのレコードを作成する関数。
+    Args:
+        config (_type_): _description_
+        result (_type_): _description_
+
+    Returns:
+        record (dict): CSVに保存するための診断結果レコード。
+        _type_: _description_
+    """
     type_names = " / ".join(diagnosis_type["name"] for diagnosis_type in result["diagnosis_types"])
     overall_level = result["overall_level"]
     user_info = result.get("profile", {})
@@ -321,6 +340,14 @@ def build_result_record(config, result):
 
 
 def append_result_to_csv(record, path):
+    """_summary_
+    CSVファイルに診断結果を追記する関数。
+    既存のCSVファイルが存在しない場合、ヘッダー行を作成してから追記する。
+    Args:
+        record (_type_): _description_
+
+        path (_type_): _description_
+    """
     write_header = not path.exists() or path.stat().st_size == 0
 
     with path.open("a", encoding="utf-8-sig", newline="") as f:
@@ -386,6 +413,16 @@ def ensure_worksheet_header(worksheet, header):
 
 
 def save_result_to_google_spreadsheet(config, result):
+    """_summary_
+    Googleスプレッドシートに診断結果を保存する関数。
+
+    Args:
+        config (_type_): _description_
+        result (_type_): _description_
+
+    Raises:
+        RuntimeError: _description_
+    """
     try:
         import gspread
         from google.oauth2.service_account import Credentials
