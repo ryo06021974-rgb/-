@@ -1,0 +1,1 @@
+diagnosis_id,created_at,name,email,company,department,job_type,position,diagnosis_type,overall_score,overall_level,ai_basic_score,tool_usage_score,business_issue_score,data_usage_score,dx_planning_score,risk_management_score,organization_drive_score,answers_json

@@ -1,0 +1,704 @@
+{
+  "app": {
+    "title": "AI・DX能力タイプ診断",
+    "description": "AI・DX時代における個人の能力タイプ、強み、伸びしろを診断するWebアプリ",
+    "question_count": 30,
+    "score_min": 0,
+    "score_max": 4,
+    "results_file": "results.csv",
+    "shuffle_questions": false
+  },
+  "abilities": [
+    {
+      "id": "ai_basic",
+      "name": "AI基礎理解",
+      "description": "AIの特徴、得意・不得意、基本的な活用場面を理解する力",
+      "order": 1
+    },
+    {
+      "id": "tool_usage",
+      "name": "ツール活用力",
+      "description": "ChatGPTなどのAI・デジタルツールを業務で活用する力",
+      "order": 2
+    },
+    {
+      "id": "business_issue",
+      "name": "業務課題発見力",
+      "description": "業務のムダや課題を発見し、改善の方向性を考える力",
+      "order": 3
+    },
+    {
+      "id": "data_usage",
+      "name": "データ活用力",
+      "description": "データを読み取り、判断や改善に活かす力",
+      "order": 4
+    },
+    {
+      "id": "dx_planning",
+      "name": "DX企画力",
+      "description": "DX導入の目的、効果、進め方を設計する力",
+      "order": 5
+    },
+    {
+      "id": "risk_management",
+      "name": "リスク管理能力",
+      "description": "情報漏えい、著作権、誤情報、セキュリティに注意する力",
+      "order": 6
+    },
+    {
+      "id": "organization_drive",
+      "name": "組織推進力",
+      "description": "周囲を巻き込み、AI・DX活用をチームや組織に広げる力",
+      "order": 7
+    }
+  ],
+  "answer_options": [
+    {
+      "id": "cannot",
+      "label": "ほとんどできない",
+      "score": 0
+    },
+    {
+      "id": "not_much",
+      "label": "あまりできない",
+      "score": 1
+    },
+    {
+      "id": "neutral",
+      "label": "どちらともいえない",
+      "score": 2
+    },
+    {
+      "id": "mostly",
+      "label": "ある程度できる",
+      "score": 3
+    },
+    {
+      "id": "enough",
+      "label": "十分できる",
+      "score": 4
+    }
+  ],
+  "levels": [
+    {
+      "id": "lv1",
+      "label": "Lv1",
+      "name": "入門者",
+      "min_score": 0,
+      "max_score": 39,
+      "description": "基礎理解や活用経験がまだ少ない段階",
+      "next_action": "AI・DXの基本用語、代表的な活用例、注意点を短い教材で確認しましょう。"
+    },
+    {
+      "id": "lv2",
+      "label": "Lv2",
+      "name": "利用者",
+      "min_score": 40,
+      "max_score": 54,
+      "description": "基本的な使い方を理解し、個人で試し始めている段階",
+      "next_action": "日常業務の小さな作業を1つ選び、AI・デジタルツールで試す習慣を作りましょう。"
+    },
+    {
+      "id": "lv3",
+      "label": "Lv3",
+      "name": "実践者",
+      "min_score": 55,
+      "max_score": 69,
+      "description": "業務や活動の中でAI・DXを実際に活用できる段階",
+      "next_action": "成果が出た使い方を記録し、再現できる手順として整理しましょう。"
+    },
+    {
+      "id": "lv4",
+      "label": "Lv4",
+      "name": "推進者",
+      "min_score": 70,
+      "max_score": 84,
+      "description": "周囲にもAI・DX活用を広げられる段階",
+      "next_action": "チーム内で活用例を共有し、共通ルールやテンプレートを整えましょう。"
+    },
+    {
+      "id": "lv5",
+      "label": "Lv5",
+      "name": "変革リーダー",
+      "min_score": 85,
+      "max_score": 100,
+      "description": "組織や業務の変革を主導できる段階",
+      "next_action": "部門横断の改善テーマを設定し、効果測定と展開計画まで設計しましょう。"
+    }
+  ],
+  "types": [
+    {
+      "id": "ai_chick",
+      "name": "AIひよこタイプ",
+      "summary": "AI・DXをこれから学び始める成長途中のタイプです。",
+      "recommended_actions": [
+        "AIの得意・不得意を確認する",
+        "身近な作業で生成AIを試す",
+        "情報漏えいや誤情報などの基本リスクを学ぶ"
+      ]
+    },
+    {
+      "id": "prompt_craftsperson",
+      "name": "プロンプト職人タイプ",
+      "summary": "AIへの指示を工夫して成果物の質を高めるタイプです。",
+      "recommended_actions": [
+        "よく使う指示文をテンプレート化する",
+        "目的・条件・出力形式を分けて指示する",
+        "チームで使えるプロンプト集を整備する"
+      ]
+    },
+    {
+      "id": "business_hacker",
+      "name": "業務ハッカータイプ",
+      "summary": "業務のムダを見つけ、効率化につなげるタイプです。",
+      "recommended_actions": [
+        "日常業務の手戻りや待ち時間を洗い出す",
+        "改善前後で比較できる指標を決める",
+        "小さな自動化から試して効果を測る"
+      ]
+    },
+    {
+      "id": "data_detective",
+      "name": "データ探偵タイプ",
+      "summary": "データから傾向や課題を読み解くタイプです。",
+      "recommended_actions": [
+        "表やグラフから仮説を立てる練習をする",
+        "データの不足や偏りを確認する",
+        "判断理由を数字と言葉の両方で説明する"
+      ]
+    },
+    {
+      "id": "dx_architect",
+      "name": "DX設計士タイプ",
+      "summary": "DX施策の目的や仕組みを設計するタイプです。",
+      "recommended_actions": [
+        "導入目的と期待効果を1枚に整理する",
+        "小さく試す検証計画を作る",
+        "関係者への影響と運用ルールを先に考える"
+      ]
+    },
+    {
+      "id": "ai_guardian",
+      "name": "AIガーディアンタイプ",
+      "summary": "安全で信頼できるAI活用を支えるタイプです。",
+      "recommended_actions": [
+        "入力してよい情報と避ける情報を整理する",
+        "著作権、引用、個人情報の扱いを確認する",
+        "AI出力の事実確認手順をチームに共有する"
+      ]
+    },
+    {
+      "id": "drive_captain",
+      "name": "巻き込み隊長タイプ",
+      "summary": "周囲を巻き込み、AI・DX活用を広げるタイプです。",
+      "recommended_actions": [
+        "小さな成功事例を共有する",
+        "不安や抵抗感を持つ人の声を聞く",
+        "チームで試せる活用テーマを提案する"
+      ]
+    },
+    {
+      "id": "future_leader",
+      "name": "未来変革リーダータイプ",
+      "summary": "AI・DXを使って組織変革を進めるタイプです。",
+      "recommended_actions": [
+        "部門をまたぐ改善テーマを設定する",
+        "成果指標と運用体制を設計する",
+        "推進人材を育てる仕組みを作る"
+      ]
+    }
+  ],
+  "type_rules": [
+    {
+      "id": "low_overall",
+      "rule_type": "overall_range",
+      "type_id": "ai_chick",
+      "min_score": 0,
+      "max_score": 39,
+      "priority": 1
+    },
+    {
+      "id": "high_overall",
+      "rule_type": "overall_range",
+      "type_id": "future_leader",
+      "min_score": 85,
+      "max_score": 100,
+      "priority": 2
+    },
+    {
+      "id": "top_ai_basic",
+      "rule_type": "top_ability",
+      "ability_id": "ai_basic",
+      "type_id": "ai_chick",
+      "priority": 10
+    },
+    {
+      "id": "top_tool_usage",
+      "rule_type": "top_ability",
+      "ability_id": "tool_usage",
+      "type_id": "prompt_craftsperson",
+      "priority": 10
+    },
+    {
+      "id": "top_business_issue",
+      "rule_type": "top_ability",
+      "ability_id": "business_issue",
+      "type_id": "business_hacker",
+      "priority": 10
+    },
+    {
+      "id": "top_data_usage",
+      "rule_type": "top_ability",
+      "ability_id": "data_usage",
+      "type_id": "data_detective",
+      "priority": 10
+    },
+    {
+      "id": "top_dx_planning",
+      "rule_type": "top_ability",
+      "ability_id": "dx_planning",
+      "type_id": "dx_architect",
+      "priority": 10
+    },
+    {
+      "id": "top_risk_management",
+      "rule_type": "top_ability",
+      "ability_id": "risk_management",
+      "type_id": "ai_guardian",
+      "priority": 10
+    },
+    {
+      "id": "top_organization_drive",
+      "rule_type": "top_ability",
+      "ability_id": "organization_drive",
+      "type_id": "drive_captain",
+      "priority": 10
+    }
+  ],
+  "warnings": [
+    {
+      "id": "risk_management_low",
+      "ability_id": "risk_management",
+      "threshold": 50,
+      "message": "AI活用時の情報漏えい、著作権、誤情報への注意が必要です"
+    },
+    {
+      "id": "data_usage_low",
+      "ability_id": "data_usage",
+      "threshold": 50,
+      "message": "効果測定や判断材料の整理に伸びしろがあります"
+    },
+    {
+      "id": "business_issue_low",
+      "ability_id": "business_issue",
+      "threshold": 50,
+      "message": "ツール活用の前に、業務課題を整理する力を伸ばすとよいでしょう"
+    },
+    {
+      "id": "organization_drive_low",
+      "ability_id": "organization_drive",
+      "threshold": 50,
+      "message": "個人活用からチーム展開へ広げる準備が必要です"
+    },
+    {
+      "id": "dx_planning_low",
+      "ability_id": "dx_planning",
+      "threshold": 50,
+      "message": "導入目的や費用対効果を考える力を伸ばすとよいでしょう"
+    }
+  ],
+  "radar_chart": {
+    "title": "7能力レーダーチャート",
+    "min": 0,
+    "max": 100,
+    "ability_ids": [
+      "ai_basic",
+      "tool_usage",
+      "business_issue",
+      "data_usage",
+      "dx_planning",
+      "risk_management",
+      "organization_drive"
+    ]
+  },
+  "auth": {
+    "enabled": true,
+    "required_before_result": true,
+    "method": "profile_form",
+    "fields": [
+      {
+        "id": "name",
+        "label": "氏名",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "email",
+        "label": "メールアドレス",
+        "type": "email",
+        "required": true
+      },
+      {
+        "id": "company",
+        "label": "会社名",
+        "type": "text",
+        "required": false
+      },
+      {
+        "id": "department",
+        "label": "部署",
+        "type": "text",
+        "required": false
+      },
+      {
+        "id": "job_type",
+        "label": "職種",
+        "type": "text",
+        "required": false
+      },
+      {
+        "id": "position",
+        "label": "役職",
+        "type": "text",
+        "required": false
+      }
+    ],
+    "consent": {
+      "enabled": true,
+      "required": true,
+      "label": "入力した個人情報と診断結果が管理者に共有・保存されることに同意します"
+    }
+  },
+  "storage": {
+    "enabled": true,
+    "type": "google_spreadsheet",
+    "spreadsheet_id": "",
+    "spreadsheet_name": "AI_DX_Diagnosis_Results",
+    "worksheet_name": "diagnosis_results",
+    "save_timing": "before_result_display"
+  },
+  "admin": {
+    "enabled": true,
+    "view_type": "spreadsheet",
+    "metrics": [
+      "participant_count",
+      "average_total_score",
+      "type_distribution",
+      "ability_average",
+      "department_score",
+      "job_score",
+      "position_score",
+      "low_risk_score_ratio",
+      "level_4_or_higher_ratio"
+    ]
+  },
+  "analytics_metrics": [
+    {
+      "id": "participant_count",
+      "label": "診断実施人数",
+      "description": "診断を受けた人数",
+      "calculation": "count"
+    },
+    {
+      "id": "average_overall_score",
+      "label": "平均総合スコア",
+      "description": "全体のAI・DX成熟度",
+      "calculation": "mean",
+      "column": "overall_score"
+    },
+    {
+      "id": "type_distribution",
+      "label": "タイプ分布",
+      "description": "どのタイプが多いか",
+      "calculation": "value_counts",
+      "column": "diagnosis_type"
+    },
+    {
+      "id": "ability_average",
+      "label": "能力別平均",
+      "description": "組織の強み・弱み",
+      "calculation": "ability_means"
+    },
+    {
+      "id": "department_score",
+      "label": "部署別スコア",
+      "description": "部署ごとの差",
+      "calculation": "group_mean",
+      "group_by": "department",
+      "column": "overall_score"
+    },
+    {
+      "id": "job_score",
+      "label": "職種別スコア",
+      "description": "職種ごとの差",
+      "calculation": "group_mean",
+      "group_by": "job_type",
+      "column": "overall_score"
+    },
+    {
+      "id": "position_score",
+      "label": "役職別スコア",
+      "description": "管理職と一般社員の差",
+      "calculation": "group_mean",
+      "group_by": "position",
+      "column": "overall_score"
+    },
+    {
+      "id": "risk_low_score_rate",
+      "label": "リスク低スコア割合",
+      "description": "AI利用上の危険度",
+      "calculation": "below_rate",
+      "column": "risk_management_score",
+      "threshold": 50
+    },
+    {
+      "id": "level_4_or_higher_ratio",
+      "label": "Lv.4以上の割合",
+      "description": "推進人材の候補数",
+      "calculation": "level_min_rate",
+      "level_order_min": 4
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q01",
+      "text": "生成AIの得意なことと不得意なことを理解している",
+      "ability_id": "ai_basic",
+      "category": "DXリテラシー",
+      "sub_category": "デジタル技術 / AI",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q02",
+      "text": "AIやクラウドなどのデジタル技術が社会や仕事の進め方を変えている背景を説明できる",
+      "ability_id": "ai_basic",
+      "category": "DXリテラシー",
+      "sub_category": "why DXの背景 / 社会の変化",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q03",
+      "text": "ハードウェア、ソフトウェア、ネットワークの基本的な役割を理解している",
+      "ability_id": "ai_basic",
+      "category": "DXリテラシー",
+      "sub_category": "what DXで活用されるデータ・技術 / デジタル技術",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q04",
+      "text": "AIの出力をそのまま信じず、前提や根拠を確認できる",
+      "ability_id": "ai_basic",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / 留意点",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q05",
+      "text": "ChatGPTなどのAIツールに目的、条件、出力形式を具体的に伝えられる",
+      "ability_id": "tool_usage",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / ツール利用",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q06",
+      "text": "文章作成、要約、資料作成などにAI・デジタルツールを活用できる",
+      "ability_id": "tool_usage",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / 活用事例・利用方法",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q07",
+      "text": "日常業務の一部をAIや自動化ツールで効率化できる",
+      "ability_id": "tool_usage",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / ツール利用",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q08",
+      "text": "クラウドサービスを使ってファイル共有や共同編集を進められる",
+      "ability_id": "tool_usage",
+      "category": "DXリテラシー",
+      "sub_category": "what DXで活用されるデータ・技術 / クラウド",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q09",
+      "text": "複数のデジタルツールを比べ、目的に合う使い方を選べる",
+      "ability_id": "tool_usage",
+      "category": "マインドスタンス",
+      "sub_category": "変化への適応",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q10",
+      "text": "業務や活動の中にあるムダ、重複、待ち時間を見つけられる",
+      "ability_id": "business_issue",
+      "category": "マインドスタンス",
+      "sub_category": "変化への適応",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q11",
+      "text": "顧客やユーザーの困りごとから改善テーマを考えられる",
+      "ability_id": "business_issue",
+      "category": "マインドスタンス",
+      "sub_category": "顧客・ユーザー視点",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q12",
+      "text": "課題を原因、影響、関係者に分けて整理できる",
+      "ability_id": "business_issue",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / 活用事例・利用方法",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q13",
+      "text": "改善前と改善後の違いを説明できる指標を考えられる",
+      "ability_id": "business_issue",
+      "category": "DXリテラシー",
+      "sub_category": "what DXで活用されるデータ・技術 / データによって判断する",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q14",
+      "text": "表やグラフから傾向、変化、異常値を読み取れる",
+      "ability_id": "data_usage",
+      "category": "DXリテラシー",
+      "sub_category": "what DXで活用されるデータ・技術 / データを読む・説明する",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q15",
+      "text": "必要なデータを集め、項目や形式を整理できる",
+      "ability_id": "data_usage",
+      "category": "DXリテラシー",
+      "sub_category": "what DXで活用されるデータ・技術 / データを扱う",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q16",
+      "text": "データをもとに判断理由を説明できる",
+      "ability_id": "data_usage",
+      "category": "DXリテラシー",
+      "sub_category": "what DXで活用されるデータ・技術 / データによって判断する",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q17",
+      "text": "アンケート、ログ、売上など身近なデータを改善に活かせる",
+      "ability_id": "data_usage",
+      "category": "DXリテラシー",
+      "sub_category": "what DXで活用されるデータ・技術 / 社会におけるデータ",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q18",
+      "text": "データの不足や偏りに気づき、結論の限界を考えられる",
+      "ability_id": "data_usage",
+      "category": "DXリテラシー",
+      "sub_category": "what DXで活用されるデータ・技術 / データを読む・説明する",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q19",
+      "text": "DX施策の目的と期待効果を言葉で説明できる",
+      "ability_id": "dx_planning",
+      "category": "DXリテラシー",
+      "sub_category": "why DXの背景 / 競争環境の変化",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q20",
+      "text": "小さく試して効果を見ながら改善する進め方を設計できる",
+      "ability_id": "dx_planning",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / 活用事例・利用方法",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q21",
+      "text": "導入に必要な人、時間、費用、ツールを見積もれる",
+      "ability_id": "dx_planning",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / ツール利用",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q22",
+      "text": "関係者の負担や業務フローの変化を考えて計画を立てられる",
+      "ability_id": "dx_planning",
+      "category": "マインドスタンス",
+      "sub_category": "コラボレーション",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q23",
+      "text": "個人情報や機密情報をAIに入力しない判断ができる",
+      "ability_id": "risk_management",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / セキュリティー",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q24",
+      "text": "AI生成物の著作権、引用、利用条件に注意できる",
+      "ability_id": "risk_management",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / コンプライアンス",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q25",
+      "text": "AIの回答に誤情報や古い情報が含まれる可能性を確認できる",
+      "ability_id": "risk_management",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / モラル",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q26",
+      "text": "パスワード管理やアクセス権限など基本的なセキュリティに配慮できる",
+      "ability_id": "risk_management",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / セキュリティー",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q27",
+      "text": "新しいツールの使い方や活用例を周囲に共有できる",
+      "ability_id": "organization_drive",
+      "category": "マインドスタンス",
+      "sub_category": "コラボレーション",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q28",
+      "text": "AI・DX活用に不安を持つ人の意見を聞きながら進められる",
+      "ability_id": "organization_drive",
+      "category": "マインドスタンス",
+      "sub_category": "コラボレーション",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q29",
+      "text": "チームで活用ルールや改善案を話し合う場を作れる",
+      "ability_id": "organization_drive",
+      "category": "マインドスタンス",
+      "sub_category": "コラボレーション",
+      "score_type": "0_to_4"
+    },
+    {
+      "id": "Q30",
+      "text": "小さな成功事例をまとめて組織内に広げられる",
+      "ability_id": "organization_drive",
+      "category": "DXリテラシー",
+      "sub_category": "how データ・技術の利活用 / 活用事例・利用方法",
+      "score_type": "0_to_4"
+    }
+  ]
+}
