@@ -372,7 +372,7 @@
   "storage": {
     "enabled": true,
     "type": "google_spreadsheet",
-    "spreadsheet_id": "",
+    "spreadsheet_id": "1IuzIS_Pq_yVY2uZy0H0Sxb3y8Fis284fv55CFWjMrxg",
     "spreadsheet_name": "AI_DX_Diagnosis_Results",
     "worksheet_name": "diagnosis_results",
     "save_timing": "before_result_display"

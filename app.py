@@ -354,7 +354,11 @@ def get_or_create_worksheet(client, storage_config, column_count):
         try:
             spreadsheet = client.open(spreadsheet_name)
         except gspread.exceptions.SpreadsheetNotFound:
-            spreadsheet = client.create(spreadsheet_name)
+            raise RuntimeError(
+                f"スプレッドシート '{spreadsheet_name}' が見つかりません。"
+                "事前に Google Drive 上でスプレッドシートを作成し、"
+                "config の spreadsheet_id または spreadsheet_name を正しく設定してください。"
+            )
 
     try:
         return spreadsheet.worksheet(worksheet_name)
