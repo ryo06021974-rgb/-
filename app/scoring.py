@@ -59,16 +59,16 @@ def calculate_scores(config, answers):
         ability_id = question["ability_id"]
         option_id = answers[question["id"]]
 
-        ability_raw_scores[ability_id] += answer_options[option_id]["score"]
-        ability_max_scores[ability_id] += max_answer_score
+        ability_raw_scores[ability_id] += answer_options[option_id]["score"]#abilityごとに得点が振り分けられる
+        ability_max_scores[ability_id] += max_answer_score#abilityごとの満点を用意しておく
 
     ability_scores = {}
     for ability_id, raw_score in ability_raw_scores.items():
         max_score = ability_max_scores[ability_id]
         ability_scores[ability_id] = round(raw_score / max_score * 100, 1) if max_score else 0
-
+#abilityごとの点数を百点換算している
     overall_score = round(sum(ability_scores.values()) / len(ability_scores), 1)
-
+#全体の平均点を出す
     return {
         "ability_raw_scores": ability_raw_scores,
         "ability_max_scores": ability_max_scores,
@@ -167,7 +167,7 @@ def build_result(config, answers, profile):
         dict: スコア・レベル・診断タイプ・注意コメント・プロフィール等を含む診断結果。
     """
     score_result = calculate_scores(config, answers)
-    overall_level = get_level(score_result["overall_score"], config["levels"])
+    overall_level = get_level(score_result["overall_score"], config["levels"]) #総合スコアとレベルを入れることで総合スコアに対応するレベルを出力する
     ability_levels = {
         ability["id"]: get_level(score_result["ability_scores"][ability["id"]], config["levels"])
         for ability in config["abilities"]

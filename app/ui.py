@@ -1,12 +1,11 @@
 import random
 import re
-from pathlib import Path
 
 import pandas as pd
 import streamlit as st
 
 from app.charts import build_radar_chart
-from app.config import is_auth_required, ordered_abilities
+from app.config import PROJECT_ROOT, is_auth_required, ordered_abilities
 from app.scoring import build_result, build_result_record
 from app.storage import append_result_to_csv
 
@@ -29,7 +28,7 @@ def initialize_session_state():
     }
 
     for key, value in defaults.items():
-        if key not in st.session_state:
+        if key not in st.session_state:#このif文を使うことでページ再描画時の状態保持がされる
             st.session_state[key] = value
 
 
@@ -43,6 +42,44 @@ def is_valid_email(value):
         bool: メールアドレス形式に一致する場合 True。
     """
     return bool(re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", value))
+
+
+def read_analytics_csv(source):
+    last_error = None
+    for encoding in ("utf-8-sig", "cp932"):
+        try:
+            if hasattr(source, "seek"):
+                source.seek(0)
+            return pd.read_csv(source, encoding=encoding)
+        except UnicodeDecodeError as error:
+            last_error = error
+        except Exception as error:
+            st.warning("CSVを読み込めませんでした。ファイル形式と文字コードを確認してください。")
+            st.caption(str(error))
+            return None
+
+    st.warning("CSVを読み込めませんでした。ファイル形式と文字コードを確認してください。")
+    st.caption(str(last_error))
+    return None
+
+
+def normalize_analytics_df(config, analytics_df):
+    numeric_columns = {"overall_score", "overall_level_order"}
+    for ability in ordered_abilities(config):
+        numeric_columns.add(f"{ability['id']}_score")
+
+    for metric in config["analytics_metrics"]:
+        calculation = metric.get("calculation")
+        if calculation in {"mean", "group_mean", "below_rate"}:
+            column = metric.get("column")
+            if column:
+                numeric_columns.add(column)
+
+    for column in numeric_columns:
+        if column in analytics_df:
+            analytics_df[column] = pd.to_numeric(analytics_df[column], errors="coerce")
+
+    return analytics_df
 
 
 def render_question_form(config):
@@ -63,19 +100,19 @@ def render_question_form(config):
         if config["app"].get("shuffle_questions", False):
             random.shuffle(question_order)
         st.session_state.question_order = question_order
-
+#問題の順番を確定させる
     with st.form("diagnosis_form"):
         st.subheader("設問")
 
         for index, question_id in enumerate(st.session_state.question_order, start=1):
-            question = question_by_id[question_id]
+            question = question_by_id[question_id]#それぞれの問題番号に対応するquestionの概要が出てくる
             st.radio(
                 f"{index}. {question['text']}",
                 option_ids,
                 format_func=lambda option_id: answer_options[option_id]["label"],
                 index=None,
-                key=f"answer_{question_id}",
-            )
+                key=f"answer_{question_id}", #Streamlitが自動でst.session_state["answer_Q01"]="A4"を保存する
+            )#ここで問題番号と回答内容が辞書で格納される
 
         submitted = st.form_submit_button("診断する", type="primary")
 
@@ -83,7 +120,7 @@ def render_question_form(config):
         answers = {
             question_id: st.session_state.get(f"answer_{question_id}")
             for question_id in st.session_state.question_order
-        }
+        }#ここで設問番号と回答内容を辞書で対応させる　
 
         unanswered_ids = [
             question_id
@@ -136,7 +173,7 @@ def render_auth_form(config):
                     label,
                     key=key,
                     placeholder="必須" if field.get("required", False) else "",
-                ).strip()
+                ).strip()#user_info["name"] = "山田太郎"みたいになる
 
         consent_given = True
         if consent_config.get("enabled", False):
@@ -154,7 +191,7 @@ def render_auth_form(config):
         field["label"]
         for field in fields
         if field.get("required", False) and not user_info.get(field["id"], "")
-    ]
+    ]#つまり必須項目が未入力の場合
     if missing_fields:
         st.warning(f"必須項目を入力してください: {', '.join(missing_fields)}")
         st.stop()
@@ -276,10 +313,15 @@ def render_result(config, result):
         mime="text/csv",
     )
 
-    results_path = Path(config["app"]["results_file"])
+    results_path = PROJECT_ROOT / config["app"]["results_file"]
     if st.button("この結果を results.csv に保存"):
-        append_result_to_csv(record, results_path)
-        st.success(f"{results_path} に保存しました。")
+        try:
+            append_result_to_csv(record, results_path)
+        except OSError as error:
+            st.error("CSVファイルへの保存に失敗しました。")
+            st.caption(str(error))
+        else:
+            st.success(f"{results_path} に保存しました。")
 
     render_analytics(config)
 
@@ -304,18 +346,19 @@ def render_analytics(config):
         type="csv",
     )
 
-    results_path = Path(config["app"]["results_file"])
+    results_path = PROJECT_ROOT / config["app"]["results_file"]
     analytics_df = None
 
     if uploaded_file is not None:
-        analytics_df = pd.read_csv(uploaded_file)
+        analytics_df = read_analytics_csv(uploaded_file)
     elif results_path.exists() and results_path.stat().st_size > 0:
-        analytics_df = pd.read_csv(results_path)
+        analytics_df = read_analytics_csv(results_path)
 
     if analytics_df is None or analytics_df.empty:
         st.info("診断結果CSVを保存またはアップロードすると、組織分析を表示できます。")
         return
 
+    analytics_df = normalize_analytics_df(config, analytics_df)
     ability_by_id = {ability["id"]: ability for ability in config["abilities"]}
 
     for metric in config["analytics_metrics"]:
@@ -373,7 +416,10 @@ def render_analytics(config):
 
         elif calculation == "level_min_rate":
             if "overall_level_order" in analytics_df:
-                level_orders = analytics_df["overall_level_order"]
+                level_orders = pd.to_numeric(
+                    analytics_df["overall_level_order"],
+                    errors="coerce",
+                )
             elif "overall_level" in analytics_df:
                 level_orders = analytics_df["overall_level"].astype(str).str.extract(
                     r"Lv\.?(\d+)"

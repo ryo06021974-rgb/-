@@ -10,7 +10,7 @@ from app.scoring import build_result_record
 
 
 
-def append_result_to_csv(record, path):
+def append_result_to_csv(record, path):#recordはこの下のほうの関数で定義される
     """診断結果レコードをCSVファイルに追記する。
 
     ファイルが存在しない、または空の場合はヘッダー行も書き込む。
@@ -19,13 +19,32 @@ def append_result_to_csv(record, path):
         record (dict): build_result_record() が返すフラットなレコード辞書。
         path (Path): 書き込み先CSVファイルのパス。
     """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
     write_header = not path.exists() or path.stat().st_size == 0
+    fieldnames = list(record.keys())
+
+    if not write_header:
+        with path.open("r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.DictReader(f)
+            existing_header = reader.fieldnames or []
+            rows = list(reader)
+
+        fieldnames = existing_header + [
+            column for column in record.keys() if column not in existing_header
+        ]
+        if fieldnames != existing_header:
+            with path.open("w", encoding="utf-8-sig", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                for row in rows:
+                    writer.writerow({column: row.get(column, "") for column in fieldnames})
 
     with path.open("a", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(record.keys()))
-        if write_header:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)#list(record.keys())でキーをリストでまとめ、DictWriterでそのバリューを読み込む
+        if write_header:#もし最初の行であればヘッダーとしてキーを最初の行に入れる
             writer.writeheader()
-        writer.writerow(record)
+        writer.writerow({column: record.get(column, "") for column in fieldnames})
 
 
 def get_google_service_account_info():
@@ -47,7 +66,7 @@ def get_google_service_account_info():
         "Googleスプレッドシート保存用の認証情報が設定されていません。"
         ".streamlit/secrets.toml に gcp_service_account を設定してください。"
     )
-
+#streamlitのsecrets.toml.exampleにあるgcp_service_accountの情報を自書としてPythonに読み込ませる
 
 def get_or_create_worksheet(client, storage_config, column_count):
     """指定のスプレッドシートからワークシートを取得し、なければ新規作成する。
@@ -71,7 +90,7 @@ def get_or_create_worksheet(client, storage_config, column_count):
     spreadsheet_id = storage_config.get("spreadsheet_id", "")
     spreadsheet_name = storage_config["spreadsheet_name"]
     worksheet_name = storage_config["worksheet_name"]
-
+#storage.jsonから取得する
     if spreadsheet_id:
         spreadsheet = client.open_by_key(spreadsheet_id)
     else:
@@ -84,7 +103,7 @@ def get_or_create_worksheet(client, storage_config, column_count):
                 "config の spreadsheet_id または spreadsheet_name を正しく設定してください。"
             )
 
-    try:
+    try:#ワークシートは一つのスプレットシートに複数存在するシートのこと
         return spreadsheet.worksheet(worksheet_name)
     except gspread.exceptions.WorksheetNotFound:
         return spreadsheet.add_worksheet(
@@ -94,7 +113,7 @@ def get_or_create_worksheet(client, storage_config, column_count):
         )
 
 
-def ensure_worksheet_header(worksheet, header):
+def ensure_worksheet_header(worksheet, header):#headerはこの後の関数で出てくる
     """ワークシートのヘッダー行を確認し、不足列があれば追記する。
 
     ヘッダーが空の場合は新規書き込み、既存ヘッダーに含まれない列は末尾に追加する。
@@ -142,26 +161,33 @@ def save_result_to_google_spreadsheet(config, result):
             "requirements.txt の依存関係をインストールしてください。"
         ) from error
 
-    storage_config = config["storage"]
-    record = build_result_record(config, result)
-    service_account_info = get_google_service_account_info()
-    scopes = [
-        "https://www.googleapis.com/auth/spreadsheets",
-        "https://www.googleapis.com/auth/drive",
-    ]
-    credentials = Credentials.from_service_account_info(
-        service_account_info,
-        scopes=scopes,
-    )
-    client = gspread.authorize(credentials)
-    worksheet = get_or_create_worksheet(
-        client,
-        storage_config,
-        column_count=len(record),
-    )
-    header = ensure_worksheet_header(worksheet, list(record.keys()))
-    row = [record.get(column, "") for column in header]
-    worksheet.append_row(row, value_input_option="USER_ENTERED")
+    try:
+        storage_config = config["storage"]
+        record = build_result_record(config, result)
+        service_account_info = get_google_service_account_info()
+        scopes = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive",
+        ]
+        credentials = Credentials.from_service_account_info(
+            service_account_info,
+            scopes=scopes,
+        )#証明書みたいなやつ
+        client = gspread.authorize(credentials)#証明書をこれに渡して権限を得る
+        worksheet = get_or_create_worksheet(
+            client,
+            storage_config,
+            column_count=len(record),
+        )
+        header = ensure_worksheet_header(worksheet, list(record.keys()))#実際の入力データをもとにヘッダーを作る。上にある関数により不足したデータとかも修正された状態で
+        row = [record.get(column, "") for column in header]#スプレッドシートに追加する1行分のデータをリストで作る
+        worksheet.append_row(row, value_input_option="USER_ENTERED")#ワークシートに行を追加する
+    except RuntimeError:
+        raise
+    except Exception as error:
+        raise RuntimeError(
+            f"Googleスプレッドシート保存中にエラーが発生しました: {error}"
+        ) from error
 
 
 def save_result_to_storage(config, result):

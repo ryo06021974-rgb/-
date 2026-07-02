@@ -8,7 +8,7 @@
 
 1. [アーキテクチャ](#1-アーキテクチャ)
 2. [ファイル責務](#2-ファイル責務)
-3. [diagnosis_config.json スキーマ](#3-diagnosis_configjson-スキーマ)
+3. [config/*.json スキーマ](#3-configjson-スキーマ)
 4. [診断フロー](#4-診断フロー)
 5. [セッション状態](#5-セッション状態)
 6. [スコア計算ロジック](#6-スコア計算ロジック)
@@ -26,21 +26,21 @@
 **原則: ロジックとデータの完全分離**
 
 ```
-app.py                   ← ロジック・表示のみ。診断内容はここに書かない
-diagnosis_config.json    ← すべての診断データ（設問・タイプ・レベル・ルール等）
+app/main.py              ← ロジック・表示のみ。診断内容はここに書かない
+config/*.json            ← すべての診断データ（設問・タイプ・レベル・ルール等）
 .streamlit/secrets.toml  ← 認証情報（Git管理外）
 results.csv              ← 診断結果の蓄積（実行時生成）
 ```
 
-- 設問・タイプ・レベル・注意コメントの追加・変更は `diagnosis_config.json` のみを編集する
-- `app.py` はJSONを読み込んで汎用的に動作する。特定の設問IDや能力IDをハードコードしない
+- 設問・タイプ・レベル・注意コメントの追加・変更は `config/*.json` のみを編集する
+- `app/main.py` はJSONを読み込んで汎用的に動作する。特定の設問IDや能力IDをハードコードしない
 - 機能の有効・無効は `auth.enabled` / `storage.enabled` のフラグで制御する
 
 ---
 
 ## 2. ファイル責務
 
-### app.py 関数一覧
+### app/main.py 関数一覧
 
 | 関数 | 役割 |
 | --- | --- |
@@ -63,7 +63,7 @@ results.csv              ← 診断結果の蓄積（実行時生成）
 
 ---
 
-## 3. diagnosis_config.json スキーマ
+## 3. config/*.json スキーマ
 
 ### 3-1. app
 
@@ -378,8 +378,8 @@ for rule in sorted(top_ability_rules, key=priority):
 - インデント: スペース4つ
 - 変数・関数名: `snake_case`
 - 定数: `UPPER_SNAKE_CASE`（例: `CONFIG_PATH`）
-- JSONの能力IDなどの文字列をapp.pyにハードコードしない
-- `app.py` に診断ロジックの定数（閾値・タイプ名等）を直接書かない
+- JSONの能力IDなどの文字列を `app/main.py` にハードコードしない
+- `app/main.py` に診断ロジックの定数（閾値・タイプ名等）を直接書かない
 - Streamlitのウィジェットキーは `answer_{question_id}` / `auth_{field_id}` の命名規則に従う
 - セッション状態のキーは`initialize_session_state()`で一元管理する
 
@@ -389,7 +389,7 @@ for rule in sorted(top_ability_rules, key=priority):
 
 ### 設問を追加・変更する
 
-1. `diagnosis_config.json` の `questions` 配列を編集
+1. `config/questions.json` の `questions` 配列を編集
 2. `app.question_count` を実際の設問数に合わせる
 3. 新しい能力IDを使う場合は `abilities` にも追加する
 
@@ -436,14 +436,14 @@ for rule in sorted(top_ability_rules, key=priority):
 pip install -r requirements.txt
 
 # アプリを起動
-streamlit run app.py
+streamlit run app/main.py
 ```
 
 ### Googleスプレッドシート連携をローカルでテストする
 
 1. `.streamlit/secrets.toml.example` を `.streamlit/secrets.toml` にコピー
 2. GCPサービスアカウントの認証情報を設定
-3. `diagnosis_config.json` の `storage.spreadsheet_id` に対象スプレッドシートのIDを設定
+3. `config/storage.json` の `storage.spreadsheet_id` に対象スプレッドシートのIDを設定
 4. サービスアカウントに対象スプレッドシートの編集権限を付与
 
 ### スプレッドシートなしで動かす

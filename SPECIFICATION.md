@@ -22,9 +22,9 @@
 
 アプリの処理ロジックと診断データを分離する。
 
-`app.py` はJSON読み込み、設問表示、回答受付、得点集計、スコア計算、レベル判定、タイプ判定、注意コメント判定、表示処理、レーダーチャート描画、CSV出力、集計処理のみを担当する。
+`app/main.py` はJSON読み込み、設問表示、回答受付、得点集計、スコア計算、レベル判定、タイプ判定、注意コメント判定、表示処理、レーダーチャート描画、CSV出力、集計処理のみを担当する。
 
-診断内容は `diagnosis_config.json` で管理する。
+診断内容は `config/*.json` で管理する。
 
 ## 3. 使用技術
 
@@ -51,8 +51,10 @@ google-auth
 
 ```text
 ai_dx_diagnosis_app/
-├─ app.py
-├─ diagnosis_config.json
+├─ main.py
+├─ app/
+│  └─ main.py
+├─ config/
 ├─ results.csv
 ├─ .streamlit/
 │  └─ secrets.toml
@@ -222,7 +224,7 @@ how データ・技術の利活用:
 
 ## 15. JSON設計
 
-`diagnosis_config.json` には以下を含める。
+`config/*.json` には以下を含める。
 
 - app
 - abilities
@@ -302,7 +304,7 @@ if is_answered and is_logged_in and not result_saved:
 ワークシート名: diagnosis_results
 ```
 
-既存のスプレッドシートに保存する場合は、`diagnosis_config.json` の `storage.spreadsheet_id` にスプレッドシートIDを指定できる。未指定の場合は、スプレッドシート名で検索し、見つからない場合は新規作成する。
+既存のスプレッドシートに保存する場合は、`config/storage.json` の `storage.spreadsheet_id` にスプレッドシートIDを指定できる。未指定の場合は、スプレッドシート名で検索し、見つからない場合はエラーにする。ワークシートが見つからない場合のみ新規作成する。
 
 保存タイミングは、入力者情報登録後、結果を表示する直前とする。
 
@@ -416,7 +418,7 @@ Googleスプレッドシートには、以下の項目を1診断につき1行で
 ## 23. 完成条件
 
 - StreamlitでWeb表示できる
-- `diagnosis_config.json` を読み込める
+- `config/*.json` を読み込める
 - 30問すべて表示される
 - 5択の回答を0〜4点で集計できる
 - 能力別スコアを100点換算できる
